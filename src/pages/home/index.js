@@ -4,12 +4,11 @@ import React from "react";
 import {Upload, Button} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import jschardet from 'jschardet';
-import Papa from 'papaparse'
+import {actionCreators} from "./store";
 
 class Home extends PureComponent {
 
   constructor(props) {
-
     super(props);
     this.state = {
       csvParseData: []
@@ -24,54 +23,33 @@ class Home extends PureComponent {
     let encoding = jschardet.detect(str);
     encoding = encoding.encoding;
     // 有时候会识别错误
-    if(encoding === "windows-1252"){
+    if (encoding === "windows-1252") {
       encoding = "ANSI";
     }
     return encoding;
   }
 
+  componentDidMount() {
+      this.props.changeBillData();
+  }
+
   render() {
-    const _this = this;
-    const props={
-      beforeUpload: file => {
-        const fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload= function (evt){
-          const data = evt.target.result;
-          const encoding = _this.checkEncoding(data);
-
-          Papa.parse(file, {
-            encoding: encoding,
-            complete: function (results) {
-              const res = results.data;
-              if (res[res.length - 1] === "") {
-                res.pop();
-              }
-
-              _this.setState(res);
-            }
-          })
-        }
-        return false
-      }
-    }
     return (
-        <Upload {...props}>
-          <Button icon={<UploadOutlined/>}>
-              点击上传csv
-          </Button>
-        </Upload>
+        <div>
+          home page
+        </div>
     );
   }
 }
 
-const mapStateToProps = (state)=>({
+const mapStateToProps = (state) => ({})
 
-})
-
-const mapDispatchToProps=(dispatch)=>({
-
-})
+const mapDispatchToProps = (dispatch) => ({
+  changeBillData() {
+    const action = actionCreators.getBillData();
+    dispatch(action);
+  }
+});
 
 // 连接comboStore和Home组件
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
