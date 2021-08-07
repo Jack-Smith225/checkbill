@@ -30,7 +30,8 @@ class Home extends PureComponent {
   }
 
   componentDidMount() {
-      this.props.changeBillData();
+    this.props.changeBillData();
+    this.props.getCategoryData();
   }
 
   render() {
@@ -48,6 +49,11 @@ const mapDispatchToProps = (dispatch) => ({
   changeBillData() {
     const action = actionCreators.getBillData();
     dispatch(action);
+  },
+
+  getCategoryData() {
+    const action = actionCreators.getCategoryData();
+    dispatch(action)
   }
 });
 

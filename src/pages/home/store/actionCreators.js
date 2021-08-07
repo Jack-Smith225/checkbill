@@ -9,10 +9,7 @@ export const getBillData = () => {
       const ret = [];
       const arr = res.data.split("\n");
       for (let i = 1; i < arr.length; i++) {
-        // console.log(typeof arr[i])
-        // console.log(arr[i]);
         const singleArr = arr[i].split(",");
-        console.log(singleArr)
         const singleBill = {
           type: singleArr[0],
           time: singleArr[1],
@@ -29,3 +26,26 @@ export const getBillData = () => {
     });
   };
 }
+
+export const getCategoryData = () => {
+  return (dispatch) =>{
+    axios.get('/api/categories.csv').then((res)=>{
+      const ret = [];
+      const arr = res.data.split("\n");
+      for (let i = 0; i < arr.length; i++) {
+        const singleArr = arr[i].split(",");
+        const singleCategory={
+          id: singleArr[0],
+          type: singleArr[1],
+          name: singleArr[2]
+        }
+        ret.push(singleCategory)
+      }
+      const action={
+        type: constants.GET_CATEGORY_DATA,
+        categoryList: ret
+      }
+      dispatch(action)
+    })
+  }
+};
