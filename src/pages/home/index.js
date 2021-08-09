@@ -1,49 +1,67 @@
 import {PureComponent} from "react";
 import {connect} from "react-redux";
 import React from "react";
-import {Upload, Button} from 'antd';
+import {Upload, Button, Table} from 'antd';
 import {UploadOutlined} from '@ant-design/icons';
 import jschardet from 'jschardet';
 import {actionCreators} from "./store";
+import 'antd/dist/antd.css';
+import './index.css'
+
 
 class Home extends PureComponent {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      csvParseData: []
-    }
-  }
-
-  // 检查编排
-  checkEncoding = (base64Str) => {
-    //这种方式得到的是一种二进制串
-    const str = atob(base64Str.split(";base64,")[1]); // atob  方法 Window 对象 定义和用法 atob() 方法用于解码使用 base-64 编码的字符
-    //要用二进制格式
-    let encoding = jschardet.detect(str);
-    encoding = encoding.encoding;
-    // 有时候会识别错误
-    if (encoding === "windows-1252") {
-      encoding = "ANSI";
-    }
-    return encoding;
-  }
 
   componentDidMount() {
     this.props.changeBillData();
     this.props.getCategoryData();
   }
 
+
   render() {
+
+    const columns = [
+      {
+        title: '类型',
+        dataIndex: 'type',
+        key: 'type',
+        render: type => type === '1' ? '收入' : '支出'
+      },
+      {
+        title: '时间',
+        dataIndex: 'time',
+        key: 'time'
+      },
+      {
+        title: '分类',
+        dataIndex: 'category',
+        key: 'category',
+        render: category => this.props.categoryNameDict[category]
+      },
+      {
+        title: '金额',
+        dataIndex: 'amount',
+        key: 'amount'
+      }
+    ]
+
+    // noinspection JSUnresolvedVariable
     return (
         <div>
           home page
+          <Table columns={columns} dataSource={this.props.billList}
+                 rowKey={record => record.time + record.category + record.amount}
+          />
         </div>
     );
   }
+
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+  billList: state.get('homeReducer').get('billList'),
+  categoryList: state.get('homeReducer').get('categoryList'),
+  categoryNameDict: state.get('homeReducer').get('categoryNameDict')
+})
 
 const mapDispatchToProps = (dispatch) => ({
   changeBillData() {
