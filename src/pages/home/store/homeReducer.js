@@ -13,9 +13,7 @@ const homeReducer = (homeState = defaultState, homeAction) => {
     case constants.CHANGE_BILL_DATA:
       return homeState.set('billList', homeAction.billList);
     case constants.GET_CATEGORY_DATA:
-      return homeState.set('categoryList', homeAction.categoryList)
-          .set('categoryNameDict', Object.assign({}, ...homeAction.categoryList.map((x) => ({[x.id]: x.name}))));
-
+      return homeState.set('categoryList', homeAction.categoryList);
     default:
       return homeState;
   }

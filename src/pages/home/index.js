@@ -57,11 +57,15 @@ class Home extends PureComponent {
 
 }
 
-const mapStateToProps = (state) => ({
-  billList: state.get('homeReducer').get('billList'),
-  categoryList: state.get('homeReducer').get('categoryList'),
-  categoryNameDict: state.get('homeReducer').get('categoryNameDict')
-})
+function mapStateToProps(state) {
+  const categoryList = state.get('homeReducer').get('categoryList');
+  const categoryNameDict = Object.assign({}, ...categoryList.map((x) => ({[x.id]: x.name})));
+  return {
+    billList: state.get('homeReducer').get('billList'),
+    categoryNameDict: categoryNameDict
+  }
+}
+
 
 const mapDispatchToProps = (dispatch) => ({
   changeBillData() {
