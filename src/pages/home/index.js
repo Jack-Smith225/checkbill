@@ -1,13 +1,11 @@
-import {PureComponent} from "react";
+import React, {PureComponent} from "react";
 import {connect} from "react-redux";
-import React from "react";
-import {Upload, Button, Table} from 'antd';
-import {UploadOutlined} from '@ant-design/icons';
-import jschardet from 'jschardet';
+import {Select, Table} from 'antd';
 import {actionCreators} from "./store";
 import 'antd/dist/antd.css';
 import './index.css'
 
+const {Option} = Select
 
 class Home extends PureComponent {
 
@@ -16,9 +14,7 @@ class Home extends PureComponent {
     this.props.getCategoryData();
   }
 
-
   render() {
-
     const columns = [
       {
         title: '类型',
@@ -29,7 +25,13 @@ class Home extends PureComponent {
       {
         title: '时间',
         dataIndex: 'time',
-        key: 'time'
+        key: 'time',
+        render: function (time, record) {
+          let date = new Date(parseInt(time));
+          return date.toLocaleDateString(
+              'cn-CN'
+          )
+        }
       },
       {
         title: '分类',
@@ -46,26 +48,31 @@ class Home extends PureComponent {
 
     // noinspection JSUnresolvedVariable
     return (
-        <div>
-          home page
-          <Table columns={columns} dataSource={this.props.billList}
+        <div className={"rootDiv"}>
+          <Select className={"dropDown"} onChange={this.props.handleChange} defaultValue={'全部数据'}>
+            {
+              this.props.monthList.map((item, index) => {
+                return <Option key={index} value={item}>{item}</Option>
+              })
+            }
+          </Select>
+          <Table columns={columns} dataSource={this.props.filteredBills}
                  rowKey={record => record.time + record.category + record.amount}
           />
         </div>
     );
   }
-
 }
 
 function mapStateToProps(state) {
   const categoryList = state.get('homeReducer').get('categoryList');
-  const categoryNameDict = Object.assign({}, ...categoryList.map((x) => ({[x.id]: x.name})));
   return {
     billList: state.get('homeReducer').get('billList'),
-    categoryNameDict: categoryNameDict
+    categoryNameDict: Object.assign({}, ...categoryList.map((x) => ({[x.id]: x.name}))),
+    monthList: state.get('homeReducer').get('monthList'),
+    filteredBills: state.get('homeReducer').get('filteredBills')
   }
 }
-
 
 const mapDispatchToProps = (dispatch) => ({
   changeBillData() {
@@ -76,6 +83,11 @@ const mapDispatchToProps = (dispatch) => ({
   getCategoryData() {
     const action = actionCreators.getCategoryData();
     dispatch(action)
+  },
+
+  handleChange(value) {
+    const action = actionCreators.filterBillList(value);
+    dispatch(action);
   }
 });
 

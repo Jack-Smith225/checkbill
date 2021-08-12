@@ -1,5 +1,11 @@
 
-.ant-table-wrapper {
+.rootDiv {
     width: 80%;
     margin: 10px auto;
+}
+
+.dropDown {
+    margin-bottom: 10px;
+    width: 110px;
+    text-align: center;
 }

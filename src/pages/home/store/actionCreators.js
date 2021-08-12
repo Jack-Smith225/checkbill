@@ -19,7 +19,7 @@ export const getBillData = () => {
         ret.push(singleBill)
       }
       const action = {
-        type: constants.CHANGE_BILL_DATA,
+        type: constants.GET_BILL_DATA,
         billList: ret
       }
       dispatch(action);
@@ -49,3 +49,10 @@ export const getCategoryData = () => {
     })
   }
 };
+
+export const filterBillList = function (value){
+  return {
+    type: constants.FILTER_BILLLIST,
+    month: value
+  }
+}
