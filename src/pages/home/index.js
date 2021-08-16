@@ -96,7 +96,7 @@ class Home extends Component {
             {
               this.props.showAddForm ? <AddForm/> : null
             }
-            <Table columns={columns} dataSource={this.props.filteredBillList.reverse()}
+            <Table columns={columns} dataSource={this.props.filteredBillList.slice().reverse()}
                    rowKey={record => record.time + record.category + record.amount + Math.random().toString()}
             />
             {
