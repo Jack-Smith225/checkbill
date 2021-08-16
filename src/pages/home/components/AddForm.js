@@ -160,7 +160,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = (dispatch) => ({
   submit(recordToAdd) {
-    const action = actionCreators.submit(recordToAdd);
+    const action = actionCreators.submitAddRecord(recordToAdd);
     dispatch(action);
     alert("添加成功!")
 

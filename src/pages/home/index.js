@@ -85,15 +85,14 @@ class Home extends Component {
                   }
                 </Select>
               </Form.Item>
-
             </Form>
-
 
             {
               this.props.showAddForm ?
                   <Button onClick={this.props.hideAddForm} className={"addRecordButton"} type={"primary"}>隐藏</Button> :
                   <Button onClick={this.props.displayAddForm} className={"addRecordButton"}>添加</Button>
             }
+
             {
               this.props.showAddForm ? <AddForm/> : null
             }
@@ -103,16 +102,12 @@ class Home extends Component {
             {
               this.props.selectedMonth.includes("/") ?
                   <div className={"statistic"}>
-
                     <label>月收入: {this.props.monthIncome.length !== 0 ? this.props.monthIncome.reduce(function (accumulator, currentValue) {
                       return accumulator + currentValue;
                     }) + " 元" : "暂无数据"} </label>
-
-
                     <label>月支出: {this.props.monthCost.length !== 0 ? this.props.monthCost.map(x => parseInt(x.amount)).reduce(function (accumulator, currentValue) {
                       return accumulator + currentValue;
                     }) + " 元" : "暂无数据"} </label>
-
                   </div> : null
             }
           </div>
@@ -164,20 +159,15 @@ const mapDispatchToProps = (dispatch) => (
       changeBillData() {
         const action = actionCreators.getBillData();
         dispatch(action);
-      }
-      ,
-
+      },
       getCategoryData() {
         const action = actionCreators.getCategoryData();
         dispatch(action)
-      }
-      ,
-
+      },
       handleChange(value) {
         const action = actionCreators.filterBillList(value);
         dispatch(action);
       },
-
       displayAddForm() {
         const action = actionCreators.showAddForm();
         dispatch(action);

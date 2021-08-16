@@ -4,23 +4,28 @@ import {constants} from "./index";
 import axios from "axios";
 
 export const getBillData = () => {
+  function getBillList(res) {
+    const result = [];
+    const arr = res.data.split("\n");
+    for (let i = 1; i < arr.length; i++) {
+      const singleArr = arr[i].split(",");
+      const singleBill = {
+        type: singleArr[0],
+        time: singleArr[1],
+        category: singleArr[2],
+        amount: singleArr[3]
+      }
+      result.push(singleBill)
+    }
+    return result;
+  }
+
   return (dispatch) => {
     axios.get('/api/bill.csv').then((res) => {
-      const ret = [];
-      const arr = res.data.split("\n");
-      for (let i = 1; i < arr.length; i++) {
-        const singleArr = arr[i].split(",");
-        const singleBill = {
-          type: singleArr[0],
-          time: singleArr[1],
-          category: singleArr[2],
-          amount: singleArr[3]
-        }
-        ret.push(singleBill)
-      }
+      const result = getBillList(res);
       const action = {
         type: constants.GET_BILL_DATA,
-        billList: ret
+        billList: result
       }
       dispatch(action);
     });
@@ -28,22 +33,28 @@ export const getBillData = () => {
 }
 
 export const getCategoryData = () => {
+
+  function getCategoryList(res) {
+    const result = [];
+    const arr = res.data.split("\n");
+    for (let i = 0; i < arr.length; i++) {
+      const singleArr = arr[i].split(",");
+      const singleCategory = {
+        id: singleArr[0],
+        type: singleArr[1],
+        name: singleArr[2]
+      }
+      result.push(singleCategory)
+    }
+    return result;
+  }
+
   return (dispatch) => {
     axios.get('/api/categories.csv').then((res) => {
-      const ret = [];
-      const arr = res.data.split("\n");
-      for (let i = 0; i < arr.length; i++) {
-        const singleArr = arr[i].split(",");
-        const singleCategory = {
-          id: singleArr[0],
-          type: singleArr[1],
-          name: singleArr[2]
-        }
-        ret.push(singleCategory)
-      }
+      const result = getCategoryList(res);
       const action = {
         type: constants.GET_CATEGORY_DATA,
-        categoryList: ret
+        categoryList: result
       }
       dispatch(action)
     })
@@ -57,32 +68,8 @@ export const filterBillList = function (value) {
   }
 }
 
-export const alterType = function (billType) {
-  return {
-    type: constants.ALTER_TYPE,
-    value: billType
-  }
-};
-
-export const alterDate = function (localDateStr) {
-  return {
-    type: constants.ALTER_DATE,
-    value: localDateStr
-  }
-};
-
-export const alterCategory = (value) => ({
-  type: constants.ALTER_CATEGORY,
-  value: value
-})
-
-export const alterAmount = (amount) => ({
-  type: constants.ALTER_AMOUNT,
-  value: amount
-})
-
-export const submit = (recordToAdd) => ({
-  type: constants.SUBMIT,
+export const submitAddRecord = (recordToAdd) => ({
+  type: constants.SUBMIT_ADD_RECORD,
   value: recordToAdd
 })
 
