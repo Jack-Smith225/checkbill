@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
-import {Button, Select, Table} from 'antd';
+import {Button, Form, Select, Table} from 'antd';
 import {actionCreators} from "./store";
 import 'antd/dist/antd.css';
 import './index.css'
@@ -10,6 +10,8 @@ const {Option} = Select
 
 class Home extends Component {
 
+  dropDownRef = React.createRef();
+
   constructor(props) {
     super(props);
   }
@@ -17,6 +19,13 @@ class Home extends Component {
   componentDidMount() {
     this.props.changeBillData();
     this.props.getCategoryData();
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.recordAddFlag !== this.props.recordAddFlag) {
+      this.dropDownRef.current.resetFields();
+      this.props.resetSelectMonth();
+    }
   }
 
   render() {
@@ -56,13 +65,30 @@ class Home extends Component {
     return (
         <div className={"rootDiv"}>
           <div className={"tableWrapper"}>
-            <Select className={"dropDown"} onChange={this.props.handleChange} defaultValue={'选择月份'}>
-              {
-                this.props.monthList.map((item, index) => {
-                  return <Option key={index} value={item}>{item}</Option>
-                })
-              }
-            </Select>
+
+            <Form
+                ref={this.dropDownRef}
+                name={"dropDownRef"}
+                layout={"inline"}
+            >
+              <Form.Item
+                  name={"下拉框"}
+              >
+                <Select className={"dropDown"}
+                        onChange={this.props.handleChange}
+                        placeholder={"请选择月份"}
+                >
+                  {
+                    this.props.monthList.map((item, index) => {
+                      return <Option key={index} value={item}>{item}</Option>
+                    })
+                  }
+                </Select>
+              </Form.Item>
+
+            </Form>
+
+
             {
               this.props.showAddForm ?
                   <Button onClick={this.props.hideAddForm} className={"addRecordButton"} type={"primary"}>隐藏</Button> :
@@ -74,6 +100,21 @@ class Home extends Component {
             <Table columns={columns} dataSource={this.props.filteredBillList.reverse()}
                    rowKey={record => record.time + record.category + record.amount + Math.random().toString()}
             />
+            {
+              this.props.selectedMonth.includes("/") ?
+                  <div className={"statistic"}>
+
+                    <label>月收入: {this.props.monthIncome.length !== 0 ? this.props.monthIncome.reduce(function (accumulator, currentValue) {
+                      return accumulator + currentValue;
+                    }) + " 元" : "暂无数据"} </label>
+
+
+                    <label>月支出: {this.props.monthCost.length !== 0 ? this.props.monthCost.map(x => parseInt(x.amount)).reduce(function (accumulator, currentValue) {
+                      return accumulator + currentValue;
+                    }) + " 元" : "暂无数据"} </label>
+
+                  </div> : null
+            }
           </div>
         </div>
     )
@@ -106,7 +147,15 @@ function mapStateToProps(state) {
     }).map((x) => ({[x.id]: x.name}))),
     monthList: monthList,
     filteredBillList: state.get('homeReducer').get('filteredBills'),
-    showAddForm: state.get('homeReducer').get('showAddForm')
+    showAddForm: state.get('homeReducer').get('showAddForm'),
+    monthIncome: state.get('homeReducer').get('filteredBills').filter(function (element) {
+      return element.type === "1"
+    }).map(x => parseInt(x.amount)),
+    monthCost: state.get('homeReducer').get('filteredBills').filter(function (element) {
+      return element.type === "0"
+    }),
+    selectedMonth: state.get('homeReducer').get('selectedMonth'),
+    recordAddFlag: state.get('homeReducer').get('recordAddFlag')
   }
 }
 
@@ -135,6 +184,10 @@ const mapDispatchToProps = (dispatch) => (
       },
       hideAddForm() {
         const action = actionCreators.hideAddForm();
+        dispatch(action);
+      },
+      resetSelectMonth() {
+        const action = actionCreators.resetSelectMonth();
         dispatch(action);
       }
     }

@@ -41,3 +41,12 @@
 .addRecordButton {
     margin-bottom: 10px;
 }
+
+.statistic {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.statistic label:first-child {
+    margin-right: 10px;
+}

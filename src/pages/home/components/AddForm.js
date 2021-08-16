@@ -9,6 +9,7 @@ class AddForm extends Component {
 
   formRef = React.createRef();
 
+
   check = () => {
     let recordToAdd = this.props.recordToAdd;
     if (recordToAdd.type === '') {
@@ -162,6 +163,9 @@ const mapDispatchToProps = (dispatch) => ({
     const action = actionCreators.submit(recordToAdd);
     dispatch(action);
     alert("添加成功!")
+
+    const hideAddForm = actionCreators.hideAddForm();
+    dispatch(hideAddForm);
   }
 });
 

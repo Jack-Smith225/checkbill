@@ -4,3 +4,4 @@ export const FILTER_BILLLIST = 'filter_billList';
 export const SUBMIT = 'submit';
 export const SHOW_ADD_FORM = 'show_add_form';
 export const HIDE_ADD_FORM = 'hide_add_form';
+export const RESET_SELECT_MONTH = 'reset_select_month';

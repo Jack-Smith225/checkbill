@@ -12,7 +12,8 @@ const defaultState = fromJS({
     amount: ''
   }),
   selectedMonth: '',
-  showAddForm: false
+  showAddForm: false,
+  recordAddFlag: true
 })
 
 const homeReducer = (homeState = defaultState, homeAction) => {
@@ -50,12 +51,19 @@ const homeReducer = (homeState = defaultState, homeAction) => {
         filteredBills = temp;
       }
 
+      let recordAddFlag = homeState.get('recordAddFlag');
+
       return homeState.set('billList', temp)
-          .set('filteredBills', filteredBills);
+          .set('filteredBills', filteredBills)
+          .set('recordAddFlag', !recordAddFlag);
     case constants.SHOW_ADD_FORM:
       return homeState.set('showAddForm', true);
     case constants.HIDE_ADD_FORM:
       return homeState.set('showAddForm', false);
+    case constants.RESET_SELECT_MONTH:
+      var filteredBills = homeState.get('billList');
+      return homeState.set('selectedMonth', "全部数据")
+          .set('filteredBills', filteredBills);
     default:
       return homeState;
   }

@@ -93,3 +93,7 @@ export const showAddForm = () => ({
 export const hideAddForm = () => ({
   type: constants.HIDE_ADD_FORM,
 })
+
+export const resetSelectMonth = () => ({
+  type: constants.RESET_SELECT_MONTH,
+})
