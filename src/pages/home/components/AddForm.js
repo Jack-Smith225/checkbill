@@ -142,10 +142,10 @@ function mapStateToProps(state) {
 
   return {
     categoryNameDict: Object.assign({}, ...categoryList.filter(function (element) {
-      return element.id != "id";
+      return element.id !== "id";
     }).map((x) => ({[x.id]: x.name}))),
     categoryNameList: categoryList.filter(function (element) {
-      return element.name != "name"
+      return element.name !== "name"
     }).map((x) => x.name),
     categoryList: categoryList,
     typeList: ["支出", "收入"],

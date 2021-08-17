@@ -12,10 +12,6 @@ class Home extends Component {
 
   dropDownRef = React.createRef();
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     this.props.changeBillData();
     this.props.getCategoryData();
@@ -134,11 +130,11 @@ function mapStateToProps(state) {
   });
   return {
     categoryNameList: categoryList.filter(function (element) {
-      return element.name != "name"
+      return element.name !== "name"
     }).map((x) => x.name),
     billList: billList,
     categoryNameDict: Object.assign({}, ...categoryList.filter(function (element) {
-      return element.id != "id";
+      return element.id !== "id";
     }).map((x) => ({[x.id]: x.name}))),
     monthList: monthList,
     filteredBillList: state.get('homeReducer').get('filteredBills'),
